@@ -2,14 +2,18 @@ package com.example.salle.service;
 
 import org.springframework.stereotype.Service;
 
+import com.example.salle.model.RequestResponseModel;
+
 @Service
 public class SearchService implements ISearchService {
 
     @Override
-    public Boolean search(char[][] matrix, String word) {
+    public RequestResponseModel search(char[][] matrix, String word) {
+        RequestResponseModel response = new RequestResponseModel();
         // Buscamos Horizontal y verticalmente primero
-        if (searchHorandvertch(matrix, word))
-            return true;
+        response = searchHorandvertch(matrix, word);
+        if (response.getContains())
+            return response;
 
         int rows = matrix.length;
         int cols = matrix[0].length;
@@ -20,14 +24,21 @@ public class SearchService implements ISearchService {
                 // Buscar desde esquina superior izquierda ó esquina inferior izquierda
                 if (searchDiagonalFromTopLeft(matrix, word, i, j)
                         || searchDiagonalFromBottomLeft(matrix, word, i + word.length() - 1, j)) {
-                    return true;
+
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
 
             // Buscar desde esquina superior derecha
             for (int j = cols - 1; j >= word.length() - 1; j--) {
                 if (searchDiagonalFromTopRight(matrix, word, i, j)) {
-                    return true;
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
         }
@@ -36,31 +47,45 @@ public class SearchService implements ISearchService {
         for (int i = rows - 1; i >= word.length() - 1; i--) {
             for (int j = cols - 1; j >= word.length() - 1; j--) {
                 if (searchDiagonalFromBottomRight(matrix, word, i, j)) {
-                    return true;
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
         }
 
-        return false;
+        response.setContains(false);
+        return response;
     }
 
     @Override
-    public Boolean searchHorandvertch(char[][] matrix, String word) {
+    public RequestResponseModel searchHorandvertch(char[][] matrix, String word) {
         int rows = matrix.length;
         int cols = matrix[0].length;
+        // Construirmos obejtso de respuesta
+        RequestResponseModel response = new RequestResponseModel();
+        response.setRows(rows);
+        response.setWord(word);
 
         // Buscar horizontalmente
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j <= cols - word.length(); j++) {
                 if (searchHorizontal(matrix, word, i, j)) {
-                    return true;
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
 
             // Buscar horizontalmente invertido
             for (int j = cols - 1; j >= word.length() - 1; j--) {
                 if (searchHorizontalReverse(matrix, word, i, j)) {
-                    return true;
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
         }
@@ -69,7 +94,10 @@ public class SearchService implements ISearchService {
         for (int i = 0; i <= rows - word.length(); i++) {
             for (int j = 0; j < cols; j++) {
                 if (searchVertical(matrix, word, i, j)) {
-                    return true;
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
         }
@@ -78,12 +106,16 @@ public class SearchService implements ISearchService {
         for (int i = rows - 1; i >= word.length() - 1; i--) {
             for (int j = 0; j < cols; j++) {
                 if (searchVerticalReverse(matrix, word, i, j)) {
-                    return true;
+                    response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
                 }
             }
         }
 
-        return false;
+        response.setContains(false);
+        return response;
     }
 
     // Método para buscar horizontalmente

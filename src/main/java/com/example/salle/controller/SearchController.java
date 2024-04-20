@@ -24,25 +24,26 @@ public class SearchController {
     private ISearchService iSearchService;
 
     @PostMapping("search-horandvert/")
-    public ResponseEntity<RequestResponseModel> searchHorandvert(@Valid @RequestBody RequestResponseModel request, BindingResult bindingResult) {
+    public ResponseEntity<RequestResponseModel> searchHorandvert(@Valid @RequestBody RequestResponseModel request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-    
-        Boolean result = iSearchService.searchHorandvertch(request.getMatrix(), request.getWord());
-        RequestResponseModel response = new RequestResponseModel(request.getSearchword(), request.getRows(), request.getWord(), result);
+        RequestResponseModel response = iSearchService.searchHorandvertch(request.getMatrix(), request.getWord());
+        response.setSearchword(request.getSearchword());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
+
     @PostMapping("search/")
-    public ResponseEntity<RequestResponseModel> search(@Valid @RequestBody RequestResponseModel request, BindingResult bindingResult) {
+    public ResponseEntity<RequestResponseModel> search(@Valid @RequestBody RequestResponseModel request,
+            BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-    
-        Boolean result = iSearchService.search(request.getMatrix(), request.getWord());
-        RequestResponseModel response = new RequestResponseModel(request.getSearchword(), request.getRows(), request.getWord(), result);
+
+        RequestResponseModel response = iSearchService.search(request.getMatrix(), request.getWord());
+        response.setSearchword(request.getSearchword());
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    
+
 }

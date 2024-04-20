@@ -21,6 +21,8 @@ public class RequestResponseModel {
     @NotBlank
     private String word;
     private Boolean contains;
+    private int startRow;
+    private int startCol;
 
     public RequestResponseModel() {
         super();
