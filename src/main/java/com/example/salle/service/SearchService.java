@@ -9,9 +9,8 @@ public class SearchService implements ISearchService {
 
     @Override
     public RequestResponseModel search(char[][] matrix, String word) {
-        RequestResponseModel response = new RequestResponseModel();
         // Buscamos Horizontal y verticalmente primero
-        response = searchHorandvertch(matrix, word);
+        RequestResponseModel response = searchHorandvertch(matrix, word);
         if (response.getContains())
             return response;
 
@@ -22,10 +21,16 @@ public class SearchService implements ISearchService {
         for (int i = 0; i <= rows - word.length(); i++) {
             for (int j = 0; j <= cols - word.length(); j++) {
                 // Buscar desde esquina superior izquierda ó esquina inferior izquierda
-                if (searchDiagonalFromTopLeft(matrix, word, i, j)
-                        || searchDiagonalFromBottomLeft(matrix, word, i + word.length() - 1, j)) {
+                if (searchDiagonalFromTopLeft(matrix, word, i, j)) {
 
                     response.setStartRow(i);
+                    response.setStartCol(j);
+                    response.setContains(true);
+                    return response;
+                } 
+                if (searchDiagonalFromBottomLeft(matrix, word, i + word.length() - 1, j)) {
+
+                    response.setStartRow(i + word.length() - 1);
                     response.setStartCol(j);
                     response.setContains(true);
                     return response;

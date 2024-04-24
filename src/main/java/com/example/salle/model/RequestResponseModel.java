@@ -24,17 +24,6 @@ public class RequestResponseModel {
     private int startRow;
     private int startCol;
 
-    public RequestResponseModel() {
-        super();
-    }
-
-    public RequestResponseModel(String searchword, int rows, String word, Boolean contains) {
-        this.searchword = searchword;
-        this.rows = rows;
-        this.word = word;
-        this.contains = contains;
-    }
-
     public char[][] getMatrix() {
         int cols = this.searchword.length() / this.rows;
         char[][] matrix = new char[this.rows][cols];
